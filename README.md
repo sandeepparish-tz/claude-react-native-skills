@@ -33,18 +33,18 @@ They help Claude:
 
 ## Skills
 
-| Skill | Purpose |
-|-------|---------|
-| `project-context` | Analyze a project and create/update its `CLAUDE.md` with discovered conventions and constraints |
-| `codebase-analysis` | Two modes: broad orientation survey of a codebase, or deep end-to-end flow trace from a defined start point to a defined end point |
-| `feature-analysis` | Analyze a feature requirement and produce a reviewable implementation artifact before coding begins |
-| `feature-development` | Implement new functionality by reusing existing architecture, patterns, and utilities |
-| `bug-fix` | Diagnose defects through evidence-based root-cause analysis; implement minimal, verified fixes |
-| `refactor` | Safely improve code structure without changing behavior; effective on AI-generated or iteratively patched code |
-| `ui-ux-review` | Inspect UI for visual consistency, UX quality, accessibility, and platform-specific behavior |
-| `code-review` | Final engineering quality gate: correctness, architecture, security, performance, and maintainability |
-| `test-review` | Assess test coverage quality, identify important gaps, and recommend improvements |
-| `skill-customization` | Adapt installed universal skills to the current project's architecture, tooling, and conventions |
+| Skill | Purpose | Example |
+|-------|---------|---------|
+| `project-context` | Analyze the project and create or update its `CLAUDE.md` | Initialize project context |
+| `codebase-analysis` | End-to-end flow analysis from a defined start to end point, or broad orientation survey of a codebase | Trace the login flow end-to-end |
+| `feature-analysis` | Analyze a feature requirement and produce a reviewable implementation artifact before coding | Analyze a feature before implementation |
+| `feature-development` | Implement new functionality by reusing existing architecture, patterns, and utilities | Implement the notifications feature |
+| `bug-fix` | Diagnose defects through evidence-based root-cause analysis; implement minimal, verified fixes | Diagnose and fix a reported crash |
+| `refactor` | Safely improve code structure without changing behavior; effective on AI-generated or iterative code | Clean up a feature implementation |
+| `ui-ux-review` | Inspect UI for visual consistency, UX quality, accessibility, and platform-specific behavior | Review a screen against a design |
+| `code-review` | Final engineering quality gate: correctness, architecture, security, performance, and maintainability | Review the current implementation |
+| `test-review` | Assess test coverage quality, identify meaningful gaps, and evaluate test reliability | Identify missing regression tests |
+| `skill-customization` | Customize installed universal skills for project-specific architecture and conventions while preserving the universal workflow | Customize skills for this project |
 
 ---
 
@@ -131,9 +131,34 @@ preserving our project-specific customizations.
 
 ## Recommended workflows
 
-### New feature (full workflow)
+These are suggested combinations, not mandatory pipelines. Each skill also works independently.
+
+### Understand an existing flow
+
 ```
-project-context        ← establish/update CLAUDE.md if needed
+codebase-analysis      ← trace the flow from start point to end point
+```
+
+### Understand a new requirement before coding
+
+```
+feature-analysis       ← analyze requirements and produce an implementation artifact
+```
+
+### Analyze then implement
+
+```
+codebase-analysis      ← understand the relevant area
+      ↓
+feature-analysis       ← analyze requirements; produce and review artifact
+      ↓
+feature-development    ← implement using the artifact as a guide
+```
+
+### Full feature workflow
+
+```
+project-context        ← create or update CLAUDE.md if needed
       ↓
 codebase-analysis      ← understand the relevant area
       ↓
@@ -148,40 +173,43 @@ test-review            ← verify test coverage
 code-review            ← final quality gate
 ```
 
-### Bug fix
+### Fix a bug
+
 ```
-codebase-analysis      ← if the subsystem is unfamiliar
+codebase-analysis      ← trace the affected flow (if area is unfamiliar)
       ↓
-bug-fix                ← evidence → root cause → minimal fix
+bug-fix                ← root cause → minimal fix
       ↓
 test-review            ← confirm regression test was added
       ↓
 code-review            ← verify the fix is clean
 ```
 
-### AI-generated or messy codebase
+### Clean up an existing implementation
+
 ```
 codebase-analysis      ← understand what actually exists
       ↓
-refactor               ← clean up patch-on-patch debt, dead code, duplications
+refactor               ← remove duplication, dead code, patch-on-patch debt
       ↓
 test-review            ← verify behavior is preserved
       ↓
 code-review            ← verify the refactor is clean
 ```
 
-### New project or stale context
+### Set up a new project
+
 ```
-project-context        ← create or update CLAUDE.md
+project-context        ← create CLAUDE.md with discovered conventions
       ↓
 skill-customization    ← adapt installed skills to the project
-      ↓
-codebase-analysis      ← deep understanding of the full codebase
 ```
 
-### Skills are also independently useful
+### Customize skills for a project
 
-Each skill can be invoked on its own. You do not need to run the full workflow for every task.
+```
+skill-customization    ← inspect project and apply project-specific customizations
+```
 
 ---
 
@@ -224,36 +252,222 @@ The separation matters: analysis should precede implementation. Running `codebas
 
 ## Example prompts
 
-### End-to-end flow analysis
+Copy-paste ready prompts for every skill. Adjust the bracketed placeholders to match your task.
+
+---
+
+### Project context
 
 ```
-Analyze the login flow from app launch to Home.
-Start at application launch and end when an authenticated user reaches Home.
-Create the final flow analysis artifact.
+Initialize the project context for this repository.
+
+Inspect the project structure, existing CLAUDE.md, package and configuration
+files, architecture, development commands, testing setup, and project conventions.
+
+Create or update the project context without overwriting existing valid rules
+or inventing project-specific information.
 ```
 
-### Codebase orientation
+---
+
+### Codebase analysis — end-to-end flow trace
 
 ```
-Survey this codebase before I start working on the notifications feature.
+Analyze the complete login flow in this application.
+
+Start Point:
+Application launch.
+
+End Point:
+A successfully authenticated user reaches the Home screen.
+
+Trace the actual implementation from start to end, including
+authentication and session checks, navigation, input validation,
+state changes, API calls, persistence, success and failure paths,
+and relevant edge cases.
+
+Do not modify source code.
+
+Create the final flow analysis artifact and clearly distinguish
+confirmed behavior from inferred or unknown behavior.
 ```
+
+### Codebase analysis — orientation survey
+
+```
+Survey this codebase before I start working on [feature/area].
+
+Understand the project architecture, technology stack, folder structure,
+existing patterns, state management, data layer, and navigation approach.
+```
+
+---
 
 ### Feature analysis
 
 ```
-Analyze the checkout feature and create an implementation artifact before making any code changes.
+Analyze this feature request before making any code changes.
+
+[Describe the feature or paste the requirement]
+
+Inspect the existing implementation, architecture, UI patterns, state
+management, API and data flow, navigation, and reusable components.
+
+Create a reviewable implementation analysis artifact containing:
+scope, existing behavior, required changes, affected areas, edge cases,
+risks, testing considerations, and an implementation plan.
+
+Do not modify application code until the analysis is complete.
 ```
 
-### Bug investigation
+---
+
+### Feature development
 
 ```
-Trace the execution flow related to this issue and identify the root cause before changing any code.
+Implement the following feature in this project.
+
+[Describe the feature or reference the feature-analysis artifact]
+
+First inspect the existing architecture and the closest related implementation.
+Reuse existing patterns, components, and utilities where appropriate.
+
+Do not introduce unnecessary dependencies, files, abstractions,
+or architectural changes.
+
+Implement the feature, update relevant tests, and verify the final
+implementation against the requirements.
 ```
+
+---
+
+### Bug fix
+
+```
+Investigate and fix this bug.
+
+Observed behavior:
+[Describe what is happening]
+
+Expected behavior:
+[Describe what should happen]
+
+Steps to reproduce:
+[List reproduction steps, or paste a stack trace]
+
+First trace the relevant execution flow through the existing codebase
+to identify the root cause before making any changes.
+
+Make the smallest appropriate fix. Avoid unrelated changes. Verify the
+fix does not introduce regressions and run the relevant tests after the change.
+```
+
+---
+
+### Refactor
+
+```
+Refactor the implementation of this feature.
+
+[Describe the feature or code area to refactor]
+
+First analyze the current implementation and identify unnecessary,
+duplicated, patch-like, or unrelated code.
+
+Preserve the existing behavior and requirements. Use the project's
+existing architecture and patterns.
+
+Remove unnecessary complexity without introducing unrelated changes.
+
+After refactoring, verify the feature still works and run the relevant tests.
+```
+
+---
+
+### UI/UX review
+
+```
+Review this screen or feature for UI and UX quality.
+
+[Name the screen or feature]
+
+First inspect the existing implementation and any available design reference files.
+
+Compare the implementation against the project design system and provided
+design references where available.
+
+Review layout, spacing, typography, colors, components, interactions,
+loading states, error states, empty states, accessibility, responsiveness,
+and platform-specific behavior.
+
+Do not redesign the feature or modify code automatically.
+
+Report confirmed design mismatches, UX issues, accessibility issues,
+engineering limitations, and subjective observations separately.
+```
+
+---
 
 ### Code review
 
 ```
-Review the current implementation for correctness, architecture, and unnecessary changes.
+Review the current implementation for this feature or change.
+
+[Name the feature, describe the change, or specify the files to review]
+
+Inspect the actual code and its surrounding context.
+
+Look for correctness issues, regressions, architecture violations,
+unnecessary complexity, duplicated logic, error-handling gaps,
+performance concerns, security concerns, maintainability issues,
+and unnecessary changes.
+
+Prioritize real issues over stylistic preferences.
+
+Do not modify the code. Provide actionable findings with relevant
+file and line references.
+```
+
+---
+
+### Test review
+
+```
+Review the testing strategy for this feature.
+
+[Name the feature or describe what was recently changed]
+
+First inspect the existing test setup and the actual implementation.
+
+Identify missing tests, weak tests, brittle tests, duplicated tests,
+incorrect mocks, missing error and edge case coverage, and important
+user or business behaviors that are not verified.
+
+Do not judge coverage percentage alone. Focus on whether the tests
+provide meaningful protection against regressions.
+
+Do not modify the tests unless explicitly requested.
+```
+
+---
+
+### Skill customization
+
+```
+Customize the installed Claude Code skills for this project.
+
+First inspect the project architecture, technology stack, CLAUDE.md,
+existing Claude configuration, installed skills, development commands,
+testing setup, folder structure, and project-specific conventions.
+
+Identify which universal skills would benefit from project-specific customization.
+
+Preserve the universal skill behavior and existing valid customizations.
+
+Do not add temporary or task-specific rules.
+
+Create a customization plan, then apply only safe and verified
+project-specific customizations.
 ```
 
 ---
@@ -291,7 +505,7 @@ mkdir -p .claude/skills
 
 # Copy all skills
 for skill in project-context codebase-analysis feature-analysis feature-development \
-             bug-fix refactor ui-ux-review code-review test-review; do
+             bug-fix refactor ui-ux-review code-review test-review skill-customization; do
   cp -r path/to/.claude-skills/skills/$skill .claude/skills/
 done
 ```
@@ -329,7 +543,9 @@ your-project/
         │   └── SKILL.md
         ├── code-review/
         │   └── SKILL.md
-        └── test-review/
+        ├── test-review/
+        │   └── SKILL.md
+        └── skill-customization/
             └── SKILL.md
 ```
 
@@ -396,7 +612,9 @@ Each skill should:
 │   │   └── SKILL.md
 │   ├── code-review/
 │   │   └── SKILL.md
-│   └── test-review/
+│   ├── test-review/
+│   │   └── SKILL.md
+│   └── skill-customization/
 │       └── SKILL.md
 └── install/
     └── INSTALL.md
