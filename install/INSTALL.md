@@ -8,7 +8,7 @@ This document tells Claude Code how to install, update, or selectively install s
 
 Claude Code loads skills from `.claude/skills/<skill-name>/SKILL.md` within a project. Each skill is a Markdown instruction file that defines how Claude should behave for a specific type of task.
 
-This repository provides nine universal skills:
+This repository provides ten universal skills:
 
 | Name | Purpose |
 |------|---------|
@@ -21,6 +21,7 @@ This repository provides nine universal skills:
 | `ui-ux-review` | Review UI quality, accessibility, and platform behavior |
 | `code-review` | Final engineering quality gate |
 | `test-review` | Assess test coverage quality and identify gaps |
+| `skill-customization` | Adapt installed skills to the project's architecture, tooling, and conventions |
 
 ---
 
@@ -96,11 +97,13 @@ Record as: **already installed (up to date)**.
 
 1. Read the installed `SKILL.md`.
 2. Read this repository's `SKILL.md`.
-3. Determine whether the installed version has project-specific customizations (content that does not exist in the repository version — project-specific rules, project-specific commands, project-specific examples).
+3. Determine whether the installed version has project-specific customizations. A skill is considered project-customized if it contains a `## Project-Specific Configuration` section (added by `skill-customization`) or if its universal content was manually modified.
 
 **If no project-specific customizations**: Offer to replace with the repository version. Wait for explicit confirmation before overwriting.
 
-**If project-specific customizations exist**: **Do not overwrite.** Report as "installed (project-customized — skipped)." The user must explicitly request replacement.
+**If a `## Project-Specific Configuration` section is present**: **Do not overwrite.** Report as "installed (project-customized — skipped)." Inform the user: to update this skill while preserving the project customization, run the `skill-customization` skill with the instruction to update after a universal skill update.
+
+**If the universal content was manually modified (no project section separator)**: **Do not overwrite.** Report as "installed (manually customized — skipped)." The user must explicitly request replacement.
 
 ### Step 5 — Verify installation
 
@@ -143,8 +146,10 @@ Skills not installed (error):
 
 CLAUDE.md: [present / not present — recommendation if absent]
 
-Recommended next step:
-[Run project-context if no CLAUDE.md, otherwise: ready to use]
+Recommended next steps:
+1. If no CLAUDE.md: Run the `project-context` skill to analyze the project and generate CLAUDE.md.
+2. After CLAUDE.md exists: Run the `skill-customization` skill to adapt the installed skills
+   to the project's architecture, tooling, and conventions.
 ```
 
 ---
@@ -185,10 +190,10 @@ To remove a specific skill:
 rm -rf <target-project-root>/.claude/skills/<skill-name>
 ```
 
-To remove all nine skills:
+To remove all ten skills:
 ```bash
 for skill in project-context codebase-analysis feature-analysis feature-development \
-             bug-fix refactor ui-ux-review code-review test-review; do
+             bug-fix refactor ui-ux-review code-review test-review skill-customization; do
   rm -rf <target-project-root>/.claude/skills/$skill
 done
 ```
@@ -199,7 +204,7 @@ This does not affect `CLAUDE.md` or any other `.claude/` configuration.
 
 ## Adding project-specific skills
 
-After installation, add custom project-specific skills alongside these nine:
+After installation, add custom project-specific skills alongside these ten:
 
 1. Create `.claude/skills/<custom-skill-name>/SKILL.md` in the target project.
 2. Write the skill using the same structure as the installed skills.

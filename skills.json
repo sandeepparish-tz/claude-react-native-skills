@@ -55,6 +55,12 @@
       "version": "1.0.0",
       "description": "Analyze test coverage quality, identify gaps, and recommend improvements",
       "path": "skills/test-review/SKILL.md"
+    },
+    {
+      "name": "skill-customization",
+      "version": "1.0.0",
+      "description": "Adapt installed universal skills to the current project's architecture, tooling, and conventions",
+      "path": "skills/skill-customization/SKILL.md"
     }
   ]
 }

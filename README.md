@@ -44,6 +44,7 @@ They help Claude:
 | `ui-ux-review` | Inspect UI for visual consistency, UX quality, accessibility, and platform-specific behavior |
 | `code-review` | Final engineering quality gate: correctness, architecture, security, performance, and maintainability |
 | `test-review` | Assess test coverage quality, identify important gaps, and recommend improvements |
+| `skill-customization` | Adapt installed universal skills to the current project's architecture, tooling, and conventions |
 
 ---
 
@@ -83,6 +84,48 @@ The flow trace produces a structured artifact containing:
 - Flow coverage summary
 
 Flow Trace is not a file search or feature summary tool. It follows actual code references from the entry point to the end point.
+
+---
+
+## Project customization
+
+Universal skills are designed to work immediately after installation. `skill-customization` makes them aware of the specific project they are operating in.
+
+### Customization model
+
+```
+Universal Skill (SKILL.md universal content)
+      +
+Project-Specific Configuration section (appended below a separator)
+      +
+CLAUDE.md (project-wide context, read by all skills)
+      =
+Effective skill behavior for this project
+```
+
+Broad project conventions (architecture, commands, naming, constraints) belong in `CLAUDE.md` — all skills read it automatically. Information that improves exactly one skill's behavior (artifact storage location, specific test command, generated directories to exclude, design token file path) goes into that skill's `## Project-Specific Configuration` section.
+
+The project section is appended after the universal content, clearly demarcated. Universal skill updates can be applied by replacing the universal content while preserving the project section below.
+
+### Recommended first-time setup
+
+```
+project-context       ← create CLAUDE.md with project conventions
+      ↓
+skill-customization   ← add project-specific context to each relevant skill
+```
+
+### After universal skill updates
+
+```
+skill-customization   ← reapply project sections on top of updated universal skills
+```
+
+Example prompt:
+```
+The universal skills were updated. Update the installed skills while
+preserving our project-specific customizations.
+```
 
 ---
 
@@ -131,6 +174,8 @@ code-review            ← verify the refactor is clean
 ```
 project-context        ← create or update CLAUDE.md
       ↓
+skill-customization    ← adapt installed skills to the project
+      ↓
 codebase-analysis      ← deep understanding of the full codebase
 ```
 
@@ -142,13 +187,21 @@ Each skill can be invoked on its own. You do not need to run the full workflow f
 
 ## Skill categories
 
+### Setup and configuration
+
+These skills configure Claude's behavior for the project.
+
+| Skill | Role |
+|-------|------|
+| `project-context` | Inspect project and create/update `CLAUDE.md` |
+| `skill-customization` | Adapt installed skills to the project's architecture, tooling, and conventions |
+
 ### Analysis and review
 
 These skills inspect, analyze, or evaluate without modifying application code (unless changes are explicitly requested).
 
 | Skill | Role |
 |-------|------|
-| `project-context` | Inspect project and create/update `CLAUDE.md` |
 | `codebase-analysis` | Orientation survey or end-to-end flow trace of existing implementation |
 | `feature-analysis` | Analyze requirements and produce an implementation artifact before coding |
 | `ui-ux-review` | Evaluate UI/UX quality, accessibility, and platform behavior |
