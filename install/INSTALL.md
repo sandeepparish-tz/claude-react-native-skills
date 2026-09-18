@@ -22,6 +22,7 @@ This repository provides ten universal skills:
 | `code-review` | Final engineering quality gate |
 | `test-review` | Assess test coverage quality and identify gaps |
 | `skill-customization` | Adapt installed skills to the project's architecture, tooling, and conventions |
+| `figma-to-flow` | Convert a Figma design into a static UI and navigation flow specification |
 
 ---
 
@@ -190,10 +191,11 @@ To remove a specific skill:
 rm -rf <target-project-root>/.claude/skills/<skill-name>
 ```
 
-To remove all ten skills:
+To remove all skills:
 ```bash
 for skill in project-context codebase-analysis feature-analysis feature-development \
-             bug-fix refactor ui-ux-review code-review test-review skill-customization; do
+             bug-fix refactor ui-ux-review code-review test-review skill-customization \
+             figma-to-flow; do
   rm -rf <target-project-root>/.claude/skills/$skill
 done
 ```

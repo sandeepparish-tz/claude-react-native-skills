@@ -61,6 +61,12 @@
       "version": "1.0.0",
       "description": "Adapt installed universal skills to the current project's architecture, tooling, and conventions",
       "path": "skills/skill-customization/SKILL.md"
+    },
+    {
+      "name": "figma-to-flow",
+      "version": "1.0.0",
+      "description": "Convert a Figma design into a verified static UI and navigation flow specification before implementation begins",
+      "path": "skills/figma-to-flow/SKILL.md"
     }
   ]
 }

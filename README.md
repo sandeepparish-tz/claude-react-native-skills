@@ -45,6 +45,7 @@ They help Claude:
 | `code-review` | Final engineering quality gate: correctness, architecture, security, performance, and maintainability | Review the current implementation |
 | `test-review` | Assess test coverage quality, identify meaningful gaps, and evaluate test reliability | Identify missing regression tests |
 | `skill-customization` | Customize installed universal skills for project-specific architecture and conventions while preserving the universal workflow | Customize skills for this project |
+| `figma-to-flow` | Convert a Figma design into a verified static UI and navigation flow specification before implementation begins | Convert a Figma checkout flow into a static implementation spec |
 
 ---
 
@@ -145,6 +146,22 @@ codebase-analysis      ← trace the flow from start point to end point
 feature-analysis       ← analyze requirements and produce an implementation artifact
 ```
 
+### Convert Figma to a static implementation spec
+
+```
+figma-to-flow          ← inspect Figma via MCP; map screens, flow, and interactions
+```
+
+### Convert Figma then implement
+
+```
+figma-to-flow          ← produce static UI + navigation flow specification
+      ↓
+feature-development    ← implement using the specification as a guide
+      ↓
+ui-ux-review           ← verify implementation matches design
+```
+
 ### Analyze then implement
 
 ```
@@ -163,6 +180,7 @@ project-context        ← create or update CLAUDE.md if needed
 codebase-analysis      ← understand the relevant area
       ↓
 feature-analysis       ← produce implementation artifact; review before coding
+  (or figma-to-flow    ← when a Figma design is the primary source of truth)
       ↓
 feature-development    ← implement using the artifact as a plan
       ↓
@@ -232,6 +250,7 @@ These skills inspect, analyze, or evaluate without modifying application code (u
 |-------|------|
 | `codebase-analysis` | Orientation survey or end-to-end flow trace of existing implementation |
 | `feature-analysis` | Analyze requirements and produce an implementation artifact before coding |
+| `figma-to-flow` | Convert a Figma design into a static UI and navigation flow specification |
 | `ui-ux-review` | Evaluate UI/UX quality, accessibility, and platform behavior |
 | `code-review` | Final engineering quality gate before merge |
 | `test-review` | Assess test coverage quality and identify gaps |
@@ -299,6 +318,30 @@ Survey this codebase before I start working on [feature/area].
 
 Understand the project architecture, technology stack, folder structure,
 existing patterns, state management, data layer, and navigation approach.
+```
+
+---
+
+### Figma to flow
+
+```
+Review this Figma page and convert it into an implementation-ready static UI and navigation flow.
+
+[Paste Figma URL]
+
+Use Figma MCP to inspect the actual design and identify all relevant screens, states,
+components, and interactions.
+
+First inspect the existing project architecture, navigation patterns, reusable components,
+and relevant existing screens.
+
+Do not implement API or backend integration yet.
+
+Identify the complete screen-to-screen flow, ask only necessary questions, create a detailed
+implementation specification and artifact, and clearly separate confirmed, inferred, and
+unknown behavior.
+
+Do not modify application code until the specification has been reviewed.
 ```
 
 ---
@@ -505,7 +548,8 @@ mkdir -p .claude/skills
 
 # Copy all skills
 for skill in project-context codebase-analysis feature-analysis feature-development \
-             bug-fix refactor ui-ux-review code-review test-review skill-customization; do
+             bug-fix refactor ui-ux-review code-review test-review skill-customization \
+             figma-to-flow; do
   cp -r path/to/.claude-skills/skills/$skill .claude/skills/
 done
 ```
@@ -545,7 +589,9 @@ your-project/
         │   └── SKILL.md
         ├── test-review/
         │   └── SKILL.md
-        └── skill-customization/
+        ├── skill-customization/
+        │   └── SKILL.md
+        └── figma-to-flow/
             └── SKILL.md
 ```
 
@@ -614,7 +660,9 @@ Each skill should:
 │   │   └── SKILL.md
 │   ├── test-review/
 │   │   └── SKILL.md
-│   └── skill-customization/
+│   ├── skill-customization/
+│   │   └── SKILL.md
+│   └── figma-to-flow/
 │       └── SKILL.md
 └── install/
     └── INSTALL.md
