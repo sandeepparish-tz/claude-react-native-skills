@@ -1,0 +1,60 @@
+{
+  "version": "2.0.0",
+  "description": "Universal Claude Code development skills for production software projects",
+  "skills": [
+    {
+      "name": "project-context",
+      "version": "1.1.0",
+      "description": "Analyze an existing project and create or update its CLAUDE.md",
+      "path": "skills/project-context/SKILL.md"
+    },
+    {
+      "name": "codebase-analysis",
+      "version": "2.0.0",
+      "description": "Orientation survey of an unfamiliar codebase, or deep end-to-end flow trace between a defined start and end point",
+      "path": "skills/codebase-analysis/SKILL.md"
+    },
+    {
+      "name": "feature-analysis",
+      "version": "1.0.0",
+      "description": "Analyze a feature completely and produce an implementation artifact before coding begins",
+      "path": "skills/feature-analysis/SKILL.md"
+    },
+    {
+      "name": "feature-development",
+      "version": "1.1.0",
+      "description": "Implement new functionality following existing architecture and patterns",
+      "path": "skills/feature-development/SKILL.md"
+    },
+    {
+      "name": "bug-fix",
+      "version": "1.1.0",
+      "description": "Diagnose and fix defects through evidence-based root-cause analysis",
+      "path": "skills/bug-fix/SKILL.md"
+    },
+    {
+      "name": "refactor",
+      "version": "1.1.0",
+      "description": "Safely improve code structure without changing observable behavior",
+      "path": "skills/refactor/SKILL.md"
+    },
+    {
+      "name": "ui-ux-review",
+      "version": "1.0.0",
+      "description": "Inspect UI implementation for visual consistency, UX quality, accessibility, and platform behavior",
+      "path": "skills/ui-ux-review/SKILL.md"
+    },
+    {
+      "name": "code-review",
+      "version": "1.1.0",
+      "description": "Final engineering quality gate: correctness, architecture, security, performance, and maintainability",
+      "path": "skills/code-review/SKILL.md"
+    },
+    {
+      "name": "test-review",
+      "version": "1.0.0",
+      "description": "Analyze test coverage quality, identify gaps, and recommend improvements",
+      "path": "skills/test-review/SKILL.md"
+    }
+  ]
+}
